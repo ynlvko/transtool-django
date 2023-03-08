@@ -1,0 +1,22 @@
+databases:
+  - name: transtool
+    databaseName: transtool
+    user: transtool
+
+services:
+  - type: web
+    name: transtool
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn transtool.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: transtool
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
